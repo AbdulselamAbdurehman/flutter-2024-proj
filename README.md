@@ -1,2 +1,29 @@
-# flutter-2024-proj
-A repo for mobile development project.
+# Quiz-App
+
+Quiz-App is a dynamic mobile application designed to engage both students and instructors through interactive quizzes and note-taking functionalities. The app features role-based access control, allowing instructors to create, edit, and delete questions while students can answer questions, receive instant feedback, and manage their personal notes.
+
+## Features
+
+1. **User Authentication**:
+   - Sign up, login, logout.
+   - Change username or password.
+   - Delete account.
+
+2. **Question Interaction**:
+   - Read and answer questions.
+   - Receive instant feedback on answers.
+
+3. **Personal Note Management**:
+   - Create, read, update, and delete personal notes.
+   
+4. **Instructor Privileges**:
+   - Only instructors can create, edit, and delete questions.
+
+## Members
+
+| Name          | ID    |
+| ------------- | ----- |
+| `Abdulselam Abdurehman`    | `UGR/2455/14` |
+| `Daniel Asrat`  | `UGR/4100/14` |
+| `Jemil Shikuri`| `UGR/4296/14` |
+| `Metsnanat Asfaw`| `UGR/7631/12` |
