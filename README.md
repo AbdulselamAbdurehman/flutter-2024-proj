@@ -9,14 +9,19 @@ Quiz-App is a dynamic mobile application designed to engage both students and in
    - Change username or password.
    - Delete account.
 
-2. **Question Interaction**:
+2. **User Authorization**:
+   - Sign up, login, logout, Change username or password, delete account, reading and answering questions for all users.
+   - Creating, updating and deleting questions for instructors only.
+   - Creating, viewing, updating and deleting notes for all users.
+
+3. **Question Interaction**:
    - Read and answer questions.
    - Receive instant feedback on answers.
 
-3. **Personal Note Management**:
+4. **Personal Note Management**:
    - Create, read, update, and delete personal notes.
    
-4. **Instructor Privileges**:
+5. **Instructor Privileges**:
    - Only instructors can create, edit, and delete questions.
 
 ## Members
