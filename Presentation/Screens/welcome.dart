@@ -1,71 +1,59 @@
-import 'package:flutter/material.dart';
-import 'package:tourist/custom_button.dart';
+class CustomElevatedButton extends StatelessWidget {
+  final String buttonText;
+  const CustomElevatedButton({super.key, required this.buttonText});
 
-void main() {
-  runApp(const MaterialApp(
-    home: SafeArea(
-      child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(15, 20, 15, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome To',
-                style: TextStyle(
-                    fontSize: 42,
-                    // fontFamily: 'PlusJakartaSans',
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF4280EF)),
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () => {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4280EF),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              Text(
-                'QuizApp',
-                style: TextStyle(
-                    fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF4280EF)),
-              ),
-              Text(
-                'Let\'s get started',
-                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Q',
-                    style: TextStyle(
-                        fontSize: 200,
-                        // fontFamily: 'Plus Jakarta Sans-Bold',
-                        color: Color(0xFF4280EF)),
-                  )
-                ],
-              ),
-              Text(
-                'Sign in',
-                style: TextStyle(
-                  color: Color(0xFF4280EF),
-                ),
-              ),
-              SizedBox(height: 10),
-              CustomElevatedButton(buttonText: 'Student'),
-              SizedBox(height: 10),
-              CustomOutlinedButton(buttonText: 'Instructor'),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text('New To QuizApp?'),
-                  Text(
-                    'Sign up',
-                    style: TextStyle(color: Color(0xFF4280EF)),
-                  )
-                ],
-              ),
-            ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(buttonText,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)),
+            ),
           ),
-        ),
-      ),
-    ),
-  ));
+        )
+      ],
+    );
+  }
+}
+
+class CustomOutlinedButton extends StatelessWidget {
+  final String buttonText;
+  const CustomOutlinedButton({super.key, required this.buttonText});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: () => {},
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(width: 1, color: Color(0xFF4280EF)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(buttonText,
+                  style: const TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold)),
+            ),
+          ),
+        )
+      ],
+    );
+  }
 }
