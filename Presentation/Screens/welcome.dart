@@ -1,59 +1,78 @@
-class CustomElevatedButton extends StatelessWidget {
-  final String buttonText;
-  const CustomElevatedButton({super.key, required this.buttonText});
+import 'package:flutter/material.dart';
+import 'reusable.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () => {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4280EF),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+void main() {
+  runApp(MaterialApp(
+    home: SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Welcome To',
+                style: TextStyle(
+                    color: Color(0xFF4280EF),
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Text(buttonText,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class CustomOutlinedButton extends StatelessWidget {
-  final String buttonText;
-  const CustomOutlinedButton({super.key, required this.buttonText});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton(
-            onPressed: () => {},
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(width: 1, color: Color(0xFF4280EF)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+              const Text(
+                'QuizApp',
+                style: TextStyle(
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF4280EF)),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Text(buttonText,
-                  style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold)),
-            ),
+              const Text(
+                'Let\'s get started',
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: Colors.black),
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Q',
+                    style: TextStyle(fontSize: 200, color: Color(0xFF4280EF)),
+                  ),
+                ],
+              ),
+              const Text(
+                'Sign in',
+                style: TextStyle(
+                  color: Color(0xFF4280EF),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              const CustomElevatedButton(buttonText: 'Student'),
+              const SizedBox(height: 10),
+              const CustomOutlinedButton(buttonText: 'Instructor'),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text(
+                    'New To QuizApp?',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w600),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Sign up',
+                      style: TextStyle(color: Color(0xFF4280EF)),
+                    ),
+                  )
+                ],
+              ),
+            ],
           ),
-        )
-      ],
-    );
-  }
+        ),
+      ),
+    ),
+  ));
 }
