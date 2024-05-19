@@ -1,1 +1,4 @@
-class NoteLocalDatasource {}
+class NoteLocalDatasource {
+  void setData() {}
+  void getData() {}
+}

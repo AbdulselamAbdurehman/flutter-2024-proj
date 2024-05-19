@@ -2,7 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-abstract class Success extends Equatable {
+class Success extends Equatable {
   final String message;
 
   const Success(this.message);

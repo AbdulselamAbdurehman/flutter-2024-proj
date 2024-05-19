@@ -42,6 +42,7 @@ import 'package:quiz_app/features/questions/presentation/screens/instructor_scre
 
 Future<void> main() async {
   //shared Dependecies
+  WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
   final localDatasource = LocalDataSource(sharedPreferences: sharedPreferences);
   const baseUrl = 'http://10.0.2.2:3000';
