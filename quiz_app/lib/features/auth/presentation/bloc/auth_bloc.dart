@@ -10,6 +10,7 @@ import 'package:quiz_app/features/auth/domain/usecases/update_username_usecase.d
 import 'package:quiz_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:quiz_app/features/auth/presentation/bloc/auth_state.dart';
 
+// BLoC for managing authentication states and events
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Login login;
   final Signup signUp;
@@ -34,6 +35,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<DeleteUserEvent>(_onDeleteUser);
   }
 
+  // Event handler for user login
   void _onAuthLogin(LoginEvent event, Emitter<AuthState> emit) async {
     print(
         'from login event handler: userId = ${event.userId}, password = ${event.password}, role = ${event.role}');
@@ -46,6 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
+  // Event handler for user signup
   void _onAuthSignup(SignupEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     final result = await signUp(SignupParams(
@@ -55,32 +58,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         role: event.role));
 
     result.fold((failure) => emit(AuthFailure('Sign Up Failed')),
-        (sucess) => emit(AuthSuccess('Sign Up Successful')));
+        (success) => emit(AuthSuccess('Sign Up Successful')));
   }
 
+  // Event handler for user logout
   void _onAuthLogout(LogoutEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     await logout();
     emit(AuthSuccess('Logged out successfully'));
   }
 
+  // Event handler for updating user password
   void _onAuthUpdatePassword(
       UpdatePasswordEvent event, Emitter<AuthState> emit) async {
     final result = await updatePassword(UpdatePasswordParams(
         newPassword: event.params.newPassword,
         oldPassword: event.params.oldPassword));
-    result.fold((failure) => emit(AuthFailure('Password Unsuccessful')),
-        (sucess) => emit(AuthSuccess('Update Successful')));
+    result.fold((failure) => emit(AuthFailure('Password Update Unsuccessful')),
+        (success) => emit(AuthSuccess('Update Successful')));
   }
 
+  // Event handler for updating username
   void _onAuthUpdateUsername(
       UpdateUsernameEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     final result = await updateUsername(event.newUsername);
     result.fold((failure) => emit(AuthFailure('Update Unsuccessful')),
-        (sucess) => emit(AuthSuccess('Update Successful')));
+        (success) => emit(AuthSuccess('Update Successful')));
   }
 
+  // Event handler for deleting user account
   void _onDeleteUser(DeleteUserEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     final result = await deleteUser();

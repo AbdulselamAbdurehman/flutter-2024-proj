@@ -12,6 +12,7 @@ void main() {
   runApp(const Settings());
 }
 
+// Main settings widget
 class Settings extends StatelessWidget {
   const Settings({super.key});
 
@@ -24,14 +25,15 @@ class Settings extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                context.pop();
+                context.pop(); // Navigate back
               },
             ),
             actions: [
               IconButton(
                   onPressed: () {
-                    BlocProvider.of<AuthBloc>(context).add(LogoutEvent());
-                    context.go('/');
+                    BlocProvider.of<AuthBloc>(context)
+                        .add(LogoutEvent()); // Trigger logout event
+                    context.go('/'); // Navigate to home page
                   },
                   icon: Icon(Icons.logout))
             ],
@@ -48,7 +50,7 @@ class Settings extends StatelessWidget {
                       style: TextStyle(fontSize: 31, color: Color(0xFF4280EF)),
                     ),
                     SizedBox(height: 30),
-                    SettingsForm()
+                    SettingsForm() // Display settings form
                   ],
                 ),
               ]),
@@ -60,6 +62,7 @@ class Settings extends StatelessWidget {
   }
 }
 
+// Form for updating settings
 class SettingsForm extends StatefulWidget {
   const SettingsForm({super.key});
 
@@ -68,10 +71,14 @@ class SettingsForm extends StatefulWidget {
 }
 
 class _SettingsFormState extends State<SettingsForm> {
-  final _usernameController = TextEditingController();
-  final _oldPasswordController = TextEditingController();
-  final _newPasswordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final _usernameController =
+      TextEditingController(); // Controller for username input
+  final _oldPasswordController =
+      TextEditingController(); // Controller for old password input
+  final _newPasswordController =
+      TextEditingController(); // Controller for new password input
+  final _confirmPasswordController =
+      TextEditingController(); // Controller for confirm password input
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +176,7 @@ class _SettingsFormState extends State<SettingsForm> {
                           _confirmPasswordController.text &&
                       5 <= _confirmPasswordController.text.length &&
                       _confirmPasswordController.text.length <= 10) {
+                    // Trigger password update event
                     BlocProvider.of<AuthBloc>(context).add(
                       UpdatePasswordEvent(
                         params: UpdatePasswordParams(
@@ -180,6 +188,7 @@ class _SettingsFormState extends State<SettingsForm> {
                   if (_usernameController.text.isNotEmpty) {
                     print('from account_settings.dart ' +
                         _usernameController.text);
+                    // Trigger username update event
                     BlocProvider.of<AuthBloc>(context).add(UpdateUsernameEvent(
                         newUsername: _usernameController.text));
                   }
