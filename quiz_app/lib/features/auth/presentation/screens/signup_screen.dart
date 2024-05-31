@@ -25,7 +25,6 @@ class SignUpPage extends StatelessWidget {
             context.go('/');
           },
         ),
-        title: const Text('Back'),
       ),
       body: SafeArea(
         child: Container(
@@ -85,10 +84,10 @@ class _SignupFormState extends State<SignupForm> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          print('sign up failure');
+          print('from signup_page.dart sign up failure');
         } else if (state is AuthSuccess) {
-          print(' from try.dart login success');
-          // context.go('/dummy');
+          print(' from signup_page.dart signup success');
+          context.go('/signin');
         }
       },
       builder: (context, state) => Form(
@@ -227,14 +226,14 @@ class _SignupFormState extends State<SignupForm> {
                         ? () {
                             if (_signUpFormKey.currentState!.validate()) {
                               print(
-                                  'email: ${_emailController.text}: $selectedRole, username, ${_usernameController.text}, password: ${_passwordController.text}');
+                                  'email: ${_emailController.text}: $selectedRole, username: ${_usernameController.text}, password: ${_passwordController.text}');
+                              BlocProvider.of<AuthBloc>(context).add(
+                                  SignupEvent(
+                                      username: _usernameController.text,
+                                      password: _passwordController.text,
+                                      role: selectedRole,
+                                      email: _emailController.text));
                             }
-
-                            BlocProvider.of<AuthBloc>(context).add(SignupEvent(
-                                username: _usernameController.text,
-                                password: _passwordController.text,
-                                role: selectedRole,
-                                email: _emailController.text));
                           }
                         : null,
                     child: const Padding(

@@ -20,7 +20,6 @@ class SignInPage extends StatelessWidget {
             context.go('/');
           },
         ),
-        title: const Text('Back'),
       ),
       body: SafeArea(
         child: Container(
@@ -82,11 +81,15 @@ class _SigninFormState extends State<SigninForm> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text(
-                    'Processing Data. Password: ${_passwordController.text}, UserId: ${_userIdController.text}, role: $selectedRole')),
+                    'Wrong Credentials: ${_passwordController.text}, UserId: ${_userIdController.text}, role: $selectedRole')),
           );
         } else if (state is AuthSuccess) {
-          print(' from try.dart login success');
-          // context.go('/dummy');
+          print(' from signin.dart login success');
+          if (selectedRole == 'STUDENT') {
+            context.go('/student_screen');
+          } else {
+            context.go('/instructor_screen');
+          }
         }
       },
       builder: (context, state) => Form(

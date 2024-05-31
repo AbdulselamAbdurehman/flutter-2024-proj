@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_print
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
@@ -23,9 +23,12 @@ class QuestionRemoteDatasource {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       },
-      body: jsonEncode(<String, String>{
-        //todo here I should return the restApi question
-      }),
+      body:
+          // jsonEncode(<String, String>{
+          //todo here I should return the restApi question
+          jsonEncode(question.toJson()),
+      // ;
+      // }),
     );
 
     if ((response.statusCode) ~/ 100 == 2) {
@@ -39,13 +42,14 @@ class QuestionRemoteDatasource {
       QuestionModel question) async {
     final token = await localDataSource.getToken();
     final response = await http.delete(
-      Uri.parse('$baseURL/questions/${question.id}'),
+      Uri.parse('$baseURL/questions/${question.questionNumber}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       },
     );
-
+    print(
+        'question_remote_datasource.dart. statusCode: ${response.statusCode}');
     if ((response.statusCode) ~/ 100 == 2) {
       return const Right(OperationSuccess('Question Deleted.'));
     } else {
@@ -62,7 +66,6 @@ class QuestionRemoteDatasource {
         'Authorization': 'Bearer $token',
       },
     );
-
     if ((response.statusCode) ~/ 100 == 2) {
       final List<dynamic> jsonList = jsonDecode(response.body);
       final List<QuestionModel> result =
@@ -77,7 +80,7 @@ class QuestionRemoteDatasource {
       QuestionModel question) async {
     final token = await localDataSource.getToken();
     final response = await http.patch(
-      Uri.parse('$baseURL/questions/${question.id}'),
+      Uri.parse('$baseURL/questions/${question.questionNumber}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',

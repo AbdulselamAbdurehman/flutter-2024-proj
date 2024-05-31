@@ -88,11 +88,3 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (success) => emit(AuthSuccess('We\'re sorry to see you go')));
   }
 }
-
-
-                      //  context<AuthBloc>.read().add(LoginEvent(
-                      //       userId: _userIdController.text,
-                      //       password: _passwordController.text,
-                      //   //     role: selectedRole));
-                      //   print(
-                      //       'role: $selectedRole, userId, ${_userIdController.text}, password: ${_passwordController.text}');

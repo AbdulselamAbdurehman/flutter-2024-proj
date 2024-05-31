@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -14,19 +14,43 @@ import 'package:quiz_app/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:quiz_app/features/auth/domain/usecases/update_password_usecase.dart';
 import 'package:quiz_app/features/auth/domain/usecases/update_username_usecase.dart';
 import 'package:quiz_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:quiz_app/features/auth/presentation/pages/account_settings.dart';
-import 'package:quiz_app/features/auth/presentation/pages/signin_page.dart';
-import 'package:quiz_app/features/auth/presentation/pages/signup_page.dart';
+import 'package:quiz_app/features/auth/presentation/screens/account_settings.dart';
+import 'package:quiz_app/features/auth/presentation/screens/signin_screen.dart';
+import 'package:quiz_app/features/auth/presentation/screens/signup_screen.dart';
+import 'package:quiz_app/features/notes/data/datasources/note_local_datasource.dart';
+import 'package:quiz_app/features/notes/data/datasources/note_remote_datasource.dart';
+import 'package:quiz_app/features/notes/data/repositories/note_repository_impl.dart';
+import 'package:quiz_app/features/notes/domain/usecases/create_note_usecase.dart';
+import 'package:quiz_app/features/notes/domain/usecases/delete_note_usecase.dart';
+import 'package:quiz_app/features/notes/domain/usecases/get_note_usecase.dart';
+import 'package:quiz_app/features/notes/domain/usecases/update_note_usecase.dart';
+import 'package:quiz_app/features/notes/presentation/bloc/note_bloc.dart';
+import 'package:quiz_app/features/notes/presentation/screens/note_screen.dart';
+import 'package:quiz_app/features/questions/data/datasources/question_local_datasource.dart';
+import 'package:quiz_app/features/questions/data/datasources/question_remote_datasource.dart';
+import 'package:quiz_app/features/questions/data/repositories/question_repository_impl.dart';
+import 'package:quiz_app/features/questions/domain/entities/question.dart';
+import 'package:quiz_app/features/questions/domain/usecases/create_question_usecase.dart';
+import 'package:quiz_app/features/questions/domain/usecases/delete_question_usecase.dart';
+import 'package:quiz_app/features/questions/domain/usecases/fetch_questions_usecase.dart';
+import 'package:quiz_app/features/questions/domain/usecases/update_question_usecase.dart';
+import 'package:quiz_app/features/questions/presentation/bloc/question_bloc.dart';
+import 'package:quiz_app/features/questions/presentation/screens/question_form.dart';
+import 'package:quiz_app/features/questions/presentation/screens/student_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:quiz_app/features/questions/presentation/screens/instructor_screen.dart';
 
 Future<void> main() async {
-  //datasources DI
+  //shared Dependecies
   final sharedPreferences = await SharedPreferences.getInstance();
-  final localDataSource = LocalDataSource(sharedPreferences: sharedPreferences);
+  final localDatasource = LocalDataSource(sharedPreferences: sharedPreferences);
+  const baseUrl = 'http://localhost:3000';
+
+  //datasources DI
   final authLocalDatasource =
-      AuthLocalDataSource(localDataSource: localDataSource);
+      AuthLocalDataSource(localDataSource: localDatasource);
   final remoteDataSource = AuthRemoteDataSource(
-    baseURL: 'http://localhost:3000',
+    baseURL: baseUrl,
     localDataSource: authLocalDatasource,
   );
 
@@ -36,13 +60,41 @@ Future<void> main() async {
     authRemoteDataSource: remoteDataSource,
   );
 
-  //usecases DI
+  //auth usecases DI
   final login = Login(authRepository);
   final signUp = Signup(authRepository);
   final logout = Logout(authRepository);
   final updatePassword = UpdatePassword(authRepository);
   final updateUsername = UpdateUsername(authRepository);
   final deleteUser = DeleteUser(authRepository);
+
+  //questions datasources DI
+  final questionLocalDatasource = QuestionLocalDatasource();
+  final questionRemoteDatasource = QuestionRemoteDatasource(
+      baseURL: baseUrl, localDataSource: localDatasource);
+  final questionRepository = QuestionRepositoryImpl(
+      questionLocalDatasource: questionLocalDatasource,
+      questionRemoteDatasource: questionRemoteDatasource);
+
+  //questions usecases
+  final createQuestion = CreateQuestion(questionRepository);
+  final deleteQuestion = DeleteQuestion(questionRepository);
+  final fetchQuestions = FetchQuestions(questionRepository);
+  final updateQuestion = UpdateQuestion(questionRepository);
+
+  //note data sources
+  final noteLocalDatasource = NoteLocalDatasource();
+  final noteRemoteDatasource =
+      NoteRemoteDatasource(baseURL: baseUrl, localDataSource: localDatasource);
+  final noteRepository = NoteRepositoryImpl(
+      noteLocalDatasource: noteLocalDatasource,
+      noteRemoteDatasource: noteRemoteDatasource);
+
+  //note usecases
+  final createNote = CreateNote(noteRepository);
+  final deleteNote = DeleteNote(noteRepository);
+  final getNote = GetNote(noteRepository);
+  final updateNote = UpdateNote(noteRepository);
 
   //router setup
   final GoRouter router = GoRouter(
@@ -52,6 +104,26 @@ Future<void> main() async {
       GoRoute(path: '/signup', builder: (context, state) => const SignUpPage()),
       GoRoute(path: '/settings', builder: (context, state) => const Settings()),
       GoRoute(path: '/signin', builder: (context, state) => const SignInPage()),
+      GoRoute(
+          path: '/student_screen',
+          builder: (context, state) => const StudentScreen()),
+      GoRoute(
+          path: '/instructor_screen',
+          builder: (context, state) => const InstructorScreen()),
+      GoRoute(
+        path: '/question_form',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return QuestionForm(
+            question: extra?['question'] as Question?,
+            edit: extra?['edit'] as bool? ?? false,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/note',
+        builder: (context, state) => NoteScreen(),
+      )
     ],
   );
 
@@ -66,6 +138,20 @@ Future<void> main() async {
               updatePassword: updatePassword,
               updateUsername: updateUsername,
               deleteUser: deleteUser),
+        ),
+        BlocProvider<QuestionBloc>(
+          create: (BuildContext context) => QuestionBloc(
+              createQuestion: createQuestion,
+              deleteQuestion: deleteQuestion,
+              fetchQuestions: fetchQuestions,
+              updateQuestion: updateQuestion),
+        ),
+        BlocProvider<NoteBloc>(
+          create: (BuildContext context) => NoteBloc(
+              createNote: createNote,
+              deleteNote: deleteNote,
+              getNote: getNote,
+              updateNote: updateNote),
         ),
       ],
       child: MaterialApp.router(
@@ -171,3 +257,34 @@ Future<bool> hasValidToken(SharedPreferences prefs) async {
   }
   return false;
 }
+
+// void makeRequest() async {
+//   String baseURL = 'http://localhost:3000';
+//   String token =
+//       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYmR1QGdtYWlsLmNvbSIsInJvbGUiOiJJTlNUUlVDVE9SIiwiaWF0IjoxNzE3OTQ2OTc2LCJleHAiOjE3MTc5NDk5NzZ9.3AOxMmBWAUuTicKYEZqDvDWZvDWhaRdOAe2LgTzaWPo';
+//   final response = await http.get(
+//     Uri.parse('$baseURL/questions'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//       'Authorization': 'Bearer $token',
+//     },
+//   );
+//   print(response.statusCode);
+//   final result = response.body;
+//   print(response.statusCode);
+//   final finalResult = List<Map<String, dynamic>>.from(jsonDecode(result));
+//   for (var map in finalResult) {
+//     // Your logic for iterating over each map in finalResult
+//     print(map);
+//   }
+// }
+
+//   // if ((response.statusCode) ~/ 100 == 2) {
+//   //   final List<dynamic> jsonList = jsonDecode(response.body);
+//   //   final List<QuestionModel> result =
+//   //       jsonList.map((json) => QuestionModel.fromJson(json)).toList();
+//   //   return Right(result);
+//   // } else {
+//   //   return const Left(OperationFailure('Couldn\'t Fetch questions'));
+//   // }
+

@@ -24,3 +24,7 @@ class InvalidInput extends Failure {
 class DataBaseFailure extends Failure {
   const DataBaseFailure(super.message);
 }
+
+class NetworkFailure extends Failure {
+  const NetworkFailure(super.message);
+}

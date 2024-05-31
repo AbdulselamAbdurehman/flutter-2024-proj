@@ -18,50 +18,41 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) => Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {},
-          ),
-          actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  backgroundColor: const Color(0xFF4280EF),
-                  elevation: 0),
+      builder: (context, state) => SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                BlocProvider.of<AuthBloc>(context).add(LogoutEvent());
-                context.go('/');
+                context.pop();
               },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4, right: 4),
-                child: const Text(
-                  'Log Out',
-                  style: TextStyle(color: Color(0xffffffff)),
+            ),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    BlocProvider.of<AuthBloc>(context).add(LogoutEvent());
+                    context.go('/');
+                  },
+                  icon: Icon(Icons.logout))
+            ],
+          ),
+          body: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: ListView(children: const [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Settings',
+                      style: TextStyle(fontSize: 31, color: Color(0xFF4280EF)),
+                    ),
+                    SizedBox(height: 30),
+                    SettingsForm()
+                  ],
                 ),
-              ),
-            )
-          ],
-          title: const Text('Home'),
-        ),
-        body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: ListView(children: const [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Settings',
-                    style: TextStyle(fontSize: 31, color: Color(0xFF4280EF)),
-                  ),
-                  SizedBox(height: 30),
-                  SettingsForm()
-                ],
-              ),
-            ]),
+              ]),
+            ),
           ),
         ),
       ),

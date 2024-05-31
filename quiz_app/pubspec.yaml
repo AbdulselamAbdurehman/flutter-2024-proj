@@ -45,6 +45,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   sqflite: ^2.3.3+1
   path: ^1.9.0
+  connectivity_plus: ^6.0.3
 
 dev_dependencies:
   flutter_test:

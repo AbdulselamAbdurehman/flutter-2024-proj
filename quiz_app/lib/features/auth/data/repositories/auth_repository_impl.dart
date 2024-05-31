@@ -19,7 +19,7 @@ class AuthRepositoryImpl implements AuthRepository {
       required String password,
       required String role}) {
     print(
-        'from repository impl: userId = $userId, password = $password, role = $role');
+        'from auth repository impl: userId = $userId, password = $password, role = $role');
     return authRemoteDataSource.login(userId, password, role);
   }
 

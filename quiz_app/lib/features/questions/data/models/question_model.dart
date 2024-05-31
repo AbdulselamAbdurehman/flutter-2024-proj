@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'package:quiz_app/features/questions/domain/entities/question.dart';
 
 class QuestionModel extends Question {
   QuestionModel({
-    required super.id,
+    super.questionNumber,
     required super.answer,
     required super.description,
     required super.explanation,
@@ -12,21 +11,21 @@ class QuestionModel extends Question {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'questionNumber': questionNumber,
       'answer': answer,
       'description': description,
       'explanation': explanation,
-      'options': jsonEncode(options),
+      'options': options,
     };
   }
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) {
     return QuestionModel(
-      id: json['id'],
+      questionNumber: json['questionNumber'],
       answer: json['answer'],
       description: json['description'],
       explanation: json['explanation'],
-      options: List<String>.from(jsonDecode(json['options'])),
+      options: List<String>.from((json['options'])),
     );
   }
 }

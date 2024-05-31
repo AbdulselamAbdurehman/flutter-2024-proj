@@ -7,14 +7,15 @@ class Question extends Equatable {
   final String explanation;
   final List<String> options;
   final int answer;
-  final int id;
+  final int questionNumber;
   Question(
-      {required this.id,
+      {this.questionNumber = 0,
       required this.answer,
       required this.description,
       required this.explanation,
       required this.options});
 
   @override
-  List<Object?> get props => [answer, description, explanation, id, options];
+  List<Object?> get props =>
+      [answer, description, explanation, questionNumber, options];
 }

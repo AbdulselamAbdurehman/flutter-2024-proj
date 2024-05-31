@@ -12,14 +12,13 @@ class AuthRemoteDataSource {
   final AuthLocalDataSource localDataSource;
   final String baseURL;
 
-  AuthRemoteDataSource({
-    required this.baseURL,
-    required this.localDataSource,
-  });
+  AuthRemoteDataSource({required this.baseURL, required this.localDataSource});
 
   Future<Either<Failure, Success>> login(
       String userId, String password, String role) async {
     try {
+      print('login service called. from auth_remote_datasource.dart');
+
       Response response = await http.post(
         Uri.parse('$baseURL/auth/login'),
         headers: <String, String>{
