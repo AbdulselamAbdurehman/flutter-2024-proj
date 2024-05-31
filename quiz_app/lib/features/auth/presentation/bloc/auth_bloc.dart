@@ -1,149 +1,98 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: avoid_print, prefer_const_constructors
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quiz_app/features/auth/domain/repositories/auth_repository.dart';
-import 'auth_event.dart';
-import 'auth_state.dart';
+import 'package:quiz_app/features/auth/domain/usecases/delete_user_usecase.dart';
+import 'package:quiz_app/features/auth/domain/usecases/login_usecase.dart';
+import 'package:quiz_app/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:quiz_app/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:quiz_app/features/auth/domain/usecases/update_password_usecase.dart';
+import 'package:quiz_app/features/auth/domain/usecases/update_username_usecase.dart';
+import 'package:quiz_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:quiz_app/features/auth/presentation/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthRepository repository;
+  final Login login;
+  final Signup signUp;
+  final Logout logout;
+  final UpdatePassword updatePassword;
+  final UpdateUsername updateUsername;
+  final DeleteUser deleteUser;
 
-  AuthBloc({required this.repository}) : super(AuthInitial()) {
-    on<LoginEvent>(_onLogin);
-    on<SignupEvent>(_onSignup);
-    on<LogoutEvent>(_onLogout);
-    on<UpdatePasswordEvent>(_onUpdatePassword);
-    on<UpdateUsernameEvent>(_onUpdateUsername);
+  AuthBloc(
+      {required this.login,
+      required this.logout,
+      required this.signUp,
+      required this.updatePassword,
+      required this.updateUsername,
+      required this.deleteUser})
+      : super(AuthInitial()) {
+    on<LoginEvent>(_onAuthLogin);
+    on<SignupEvent>(_onAuthSignup);
+    on<LogoutEvent>(_onAuthLogout);
+    on<UpdatePasswordEvent>(_onAuthUpdatePassword);
+    on<UpdateUsernameEvent>(_onAuthUpdateUsername);
+    on<DeleteUserEvent>(_onDeleteUser);
   }
 
-  void _onLogin(LoginEvent event, Emitter<AuthState> emit) async {
+  void _onAuthLogin(LoginEvent event, Emitter<AuthState> emit) async {
+    print(
+        'from login event handler: userId = ${event.userId}, password = ${event.password}, role = ${event.role}');
     emit(AuthLoading());
-    final result = await repository.login(
-      userId: event.userId,
-      password: event.password,
-      role: event.role,
-    );
+    final result = await login(LoginParams(
+        userId: event.userId, password: event.password, role: event.role));
     result.fold(
       (failure) => emit(AuthFailure('Login failed')),
       (success) => emit(AuthSuccess('Login successful')),
     );
   }
 
-  void _onSignup(SignupEvent event, Emitter<AuthState> emit) async {
+  void _onAuthSignup(SignupEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    final result = await repository.signup(
-      username: event.username,
-      password: event.password,
-      email: event.email,
-      role: event.role,
-    );
-    result.fold(
-      (failure) => emit(AuthFailure('Signup failed')),
-      (success) => emit(AuthSuccess('Signup successful')),
-    );
+    final result = await signUp(SignupParams(
+        username: event.username,
+        password: event.password,
+        email: event.email,
+        role: event.role));
+
+    result.fold((failure) => emit(AuthFailure('Sign Up Failed')),
+        (sucess) => emit(AuthSuccess('Sign Up Successful')));
   }
 
-  void _onLogout(LogoutEvent event, Emitter<AuthState> emit) async {
+  void _onAuthLogout(LogoutEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    repository.logout();
-    // Perform logout logic here, then emit success or failure
+    await logout();
     emit(AuthSuccess('Logged out successfully'));
   }
 
-  void _onUpdatePassword(
+  void _onAuthUpdatePassword(
       UpdatePasswordEvent event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
-
-    final result = await repository.updatePassword(
-        oldPassword: event.params.oldPassword,
-        newPassword: event.params.newPassword);
-    result.fold(
-      (failure) => emit(AuthFailure('Password update failed')),
-      (success) => emit(AuthSuccess('Password updated successfully')),
-    );
+    final result = await updatePassword(UpdatePasswordParams(
+        newPassword: event.params.newPassword,
+        oldPassword: event.params.oldPassword));
+    result.fold((failure) => emit(AuthFailure('Password Unsuccessful')),
+        (sucess) => emit(AuthSuccess('Update Successful')));
   }
 
-  void _onUpdateUsername(
+  void _onAuthUpdateUsername(
       UpdateUsernameEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    final result =
-        await repository.updateUsername(newUsername: event.newUsername);
-    result.fold(
-      (failure) => emit(AuthFailure('Username update failed')),
-      (success) => emit(AuthSuccess('Username updated successfully')),
-    );
+    final result = await updateUsername(event.newUsername);
+    result.fold((failure) => emit(AuthFailure('Update Unsuccessful')),
+        (sucess) => emit(AuthSuccess('Update Successful')));
+  }
+
+  void _onDeleteUser(DeleteUserEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    final result = await deleteUser();
+    result.fold((failure) => emit(AuthFailure('Request Unsuccessful')),
+        (success) => emit(AuthSuccess('We\'re sorry to see you go')));
   }
 }
 
 
-
-// import 'dart:async';
-// // ignore: depend_on_referenced_packages
-// import 'package:bloc/bloc.dart';
-// import 'package:dartz/dartz.dart';
-// import 'package:quiz_app/core/errors/failures.dart';
-// // import 'package:quiz_app/features/auth/domain/entities/user.dart';
-// import 'package:quiz_app/features/auth/domain/usecases/login_usecase.dart';
-// import 'package:quiz_app/features/auth/domain/usecases/signup_usecase.dart';
-// import 'auth_event.dart';
-// import 'auth_state.dart';
-
-// class AuthBloc extends Bloc<AuthEvent, AuthState> {
-//   final Login login;
-//   final Signup signup;
-
-//   AuthBloc({
-//     required this.login,
-//     required this.signup,
-//   }) : super(AuthInitial());
-
-//   Stream<AuthState> mapEventToState(
-//     AuthEvent event,
-//   ) async* {
-//     if (event is LoginButtonPressed) {
-//       yield AuthLoading();
-//       // yield* _eitherLoginOrErrorState(result);
-//     } else if (event is SignupButtonPressed) {
-//       yield AuthLoading();
-//       final result = await signup(SignupParams(
-//         username: event.username,
-//         password: event.password,
-//         email: event.email,
-//         role: event.role,
-//       ));
-//       yield* _eitherSignupOrErrorState(result);
-//     } else if (event is LogoutButtonPressed) {
-//       // await logout();
-
-//       yield AuthLoggedOut();
-//     }
-//   }
-
-//   Stream<AuthState> _eitherSignupOrErrorState(
-//     Either<Failure, void> result,
-//   ) async* {
-//     yield result.fold(
-//       (failure) => AuthError(message: _mapFailureToMessage(failure)),
-//       (_) => AuthRegistered(),
-//     );
-//   }
-
-//   String _mapFailureToMessage(Failure failure) {
-//     switch (failure.runtimeType) {
-//       case ServerFailure _:
-//         return 'Server Failure';
-//       case CacheFailure _:
-//         return 'Cache Failure';
-//       default:
-//         return 'Unexpected Error';
-//     }
-//   }
-// }
-
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:quiz_app/features/auth/presentation/bloc/auth_event.dart';
-// import 'package:quiz_app/features/auth/presentation/bloc/auth_state.dart';
-
-// class AuthBloc extends Bloc<AuthEvent, AuthState>{
-  
-// }
+                      //  context<AuthBloc>.read().add(LoginEvent(
+                      //       userId: _userIdController.text,
+                      //       password: _passwordController.text,
+                      //   //     role: selectedRole));
+                      //   print(
+                      //       'role: $selectedRole, userId, ${_userIdController.text}, password: ${_passwordController.text}');

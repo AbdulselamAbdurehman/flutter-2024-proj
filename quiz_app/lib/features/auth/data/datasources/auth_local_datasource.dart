@@ -1,21 +1,19 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:quiz_app/core/utils/utility_objects.dart';
 
 class AuthLocalDataSource {
-  final SharedPreferences sharedPreferences;
+  final LocalDataSource localDataSource;
 
-  AuthLocalDataSource({required this.sharedPreferences});
-
-  static const token = 'TOKEN';
+  AuthLocalDataSource({required this.localDataSource});
 
   Future<void> setToken(String newToken) async {
-    await sharedPreferences.setString(token, newToken);
+    await localDataSource.setToken(newToken);
   }
 
   Future<String?> getToken() async {
-    return sharedPreferences.getString(token);
+    return localDataSource.getToken();
   }
 
   Future<void> clearToken() async {
-    await sharedPreferences.remove(token);
+    await localDataSource.clearToken();
   }
 }

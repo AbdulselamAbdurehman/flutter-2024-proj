@@ -1,4 +1,12 @@
+// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:quiz_app/features/auth/domain/usecases/update_password_usecase.dart';
+import 'package:quiz_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:quiz_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:quiz_app/features/auth/presentation/bloc/auth_state.dart';
 
 void main() {
   runApp(const Settings());
@@ -9,30 +17,37 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {},
-            ),
-            actions: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(5),
-                    backgroundColor: const Color(0xFF4280EF),
-                    elevation: 0),
-                onPressed: () {},
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) => Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {},
+          ),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  backgroundColor: const Color(0xFF4280EF),
+                  elevation: 0),
+              onPressed: () {
+                BlocProvider.of<AuthBloc>(context).add(LogoutEvent());
+                context.go('/');
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4, right: 4),
                 child: const Text(
                   'Log Out',
                   style: TextStyle(color: Color(0xffffffff)),
                 ),
-              )
-            ],
-            title: const Text('Home'),
-          ),
-          body: Container(
+              ),
+            )
+          ],
+          title: const Text('Home'),
+        ),
+        body: SafeArea(
+          child: Container(
             padding: const EdgeInsets.all(20),
             child: ListView(children: const [
               Column(
@@ -40,10 +55,10 @@ class Settings extends StatelessWidget {
                 children: [
                   Text(
                     'Settings',
-                    style: TextStyle(fontSize: 42, color: Color(0xFF4280EF)),
+                    style: TextStyle(fontSize: 31, color: Color(0xFF4280EF)),
                   ),
                   SizedBox(height: 30),
-                  LoginForm()
+                  SettingsForm()
                 ],
               ),
             ]),
@@ -54,14 +69,14 @@ class Settings extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class SettingsForm extends StatefulWidget {
+  const SettingsForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SettingsForm> createState() => _SettingsFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SettingsFormState extends State<SettingsForm> {
   final _usernameController = TextEditingController();
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
@@ -74,9 +89,12 @@ class _LoginFormState extends State<LoginForm> {
       children: [
         const Text(
           'Change Username',
-          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        TextField(
+        TextFormField(
+          validator: (value) {
+            if (value == null || value.length > 4) return null;
+            return 'Username must be at least four chars';
+          },
           controller: _usernameController,
           keyboardType: TextInputType.text,
           decoration: const InputDecoration(
@@ -87,9 +105,16 @@ class _LoginFormState extends State<LoginForm> {
         const SizedBox(height: 13),
         const Text(
           'Change Password',
-          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        TextField(
+        TextFormField(
+          validator: (value) {
+            if (_newPasswordController.text.isNotEmpty ||
+                _confirmPasswordController.text.isNotEmpty ||
+                (value != null && value.length < 5)) {
+              return 'Set the Old Password';
+            }
+            return null;
+          },
           controller: _oldPasswordController,
           obscureText: true,
           decoration: const InputDecoration(
@@ -98,7 +123,15 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         const SizedBox(height: 13),
-        TextField(
+        TextFormField(
+          validator: (value) {
+            if (_oldPasswordController.text.isNotEmpty ||
+                _confirmPasswordController.text.isNotEmpty ||
+                (value != null && value.length < 5)) {
+              return "Set New Password";
+            }
+            return null;
+          },
           controller: _newPasswordController,
           obscureText: true,
           decoration: const InputDecoration(
@@ -107,7 +140,19 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         const SizedBox(height: 13),
-        TextField(
+        TextFormField(
+          validator: (value) {
+            if (_oldPasswordController.text.isNotEmpty ||
+                _newPasswordController.text.isNotEmpty) {
+              if (value != null &&
+                  _newPasswordController.text.isNotEmpty &&
+                  _newPasswordController.text == value) {
+                return null;
+              }
+              return 'Confirm the New Password';
+            }
+            return null;
+          },
           controller: _confirmPasswordController,
           obscureText: true,
           decoration: const InputDecoration(
@@ -122,14 +167,38 @@ class _LoginFormState extends State<LoginForm> {
             Expanded(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(5),
                   backgroundColor: const Color(0xFF4280EF),
                   elevation: 0,
                 ),
-                onPressed: () {},
-                child: const Text(
-                  'Save',
-                  style: TextStyle(color: Color(0xffffffff)),
+                onPressed: () {
+                  if (_oldPasswordController.text.isNotEmpty &&
+                      _newPasswordController.text.isNotEmpty &&
+                      _confirmPasswordController.text.isNotEmpty &&
+                      _newPasswordController.text ==
+                          _confirmPasswordController.text &&
+                      5 <= _confirmPasswordController.text.length &&
+                      _confirmPasswordController.text.length <= 10) {
+                    BlocProvider.of<AuthBloc>(context).add(
+                      UpdatePasswordEvent(
+                        params: UpdatePasswordParams(
+                            newPassword: _newPasswordController.text,
+                            oldPassword: _oldPasswordController.text),
+                      ),
+                    );
+                  }
+                  if (_usernameController.text.isNotEmpty) {
+                    print('from account_settings.dart ' +
+                        _usernameController.text);
+                    BlocProvider.of<AuthBloc>(context).add(UpdateUsernameEvent(
+                        newUsername: _usernameController.text));
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: Color(0xffffffff)),
+                  ),
                 ),
               ),
             ),
@@ -148,41 +217,3 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 }
-
-class Button extends StatelessWidget {
-  final String title;
-  final Color color;
-  final Color textColor;
-  final VoidCallback onPressed;
-
-  const Button(
-      {super.key,
-      required this.onPressed,
-      required this.title,
-      required this.color,
-      required this.textColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.all(5),
-        side: const BorderSide(
-            width: 1.0, style: BorderStyle.solid, color: Color(0xFF4280EF)),
-        backgroundColor: color,
-        elevation: 0,
-      ),
-      onPressed: onPressed,
-      child: Text(
-        title,
-        style: TextStyle(color: textColor),
-      ),
-    );
-  }
-}
-
-              // Button(
-              //     onPressed: () {},
-              //     title: 'Log Out',
-              //     color: const Color(0xFF4280EF),
-              //     textColor: const Color(0xffffffff))

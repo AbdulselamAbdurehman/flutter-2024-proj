@@ -19,4 +19,6 @@ abstract class AuthRepository {
 
   Future<Either<Failure, Success>> updatePassword(
       {required String oldPassword, required String newPassword});
+
+  Future<Either<Failure, Success>> deleteUser();
 }

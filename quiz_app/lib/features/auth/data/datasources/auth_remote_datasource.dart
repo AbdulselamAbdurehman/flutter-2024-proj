@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:http/http.dart';
 import 'package:quiz_app/core/utils/utility_objects.dart';
 import 'dart:convert';
@@ -7,20 +9,18 @@ import 'package:quiz_app/core/errors/failures.dart';
 import 'auth_local_datasource.dart';
 
 class AuthRemoteDataSource {
-  final http.Client client;
   final AuthLocalDataSource localDataSource;
   final String baseURL;
 
   AuthRemoteDataSource({
     required this.baseURL,
-    required this.client,
     required this.localDataSource,
   });
 
   Future<Either<Failure, Success>> login(
       String userId, String password, String role) async {
     try {
-      Response response = await client.post(
+      Response response = await http.post(
         Uri.parse('$baseURL/auth/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -31,9 +31,10 @@ class AuthRemoteDataSource {
           'role': role
         }),
       );
-
+      print('from remote data source: statusCode = ${response.statusCode}');
       if ((response.statusCode) ~/ 100 == 2) {
         final token = jsonDecode(response.body)['token'];
+        print(token);
         await localDataSource.setToken(token);
         return const Right(OperationSuccess('Login Success'));
       } else {
@@ -47,7 +48,7 @@ class AuthRemoteDataSource {
   Future<Either<Failure, Success>> signup(
       String username, String password, String email, String role) async {
     try {
-      Response response = await client.post(
+      Response response = await http.post(
         Uri.parse('$baseURL/users/signup'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -72,16 +73,17 @@ class AuthRemoteDataSource {
   Future<Either<Failure, Success>> updateUsername(String newUsername) async {
     try {
       final token = await localDataSource.getToken();
-      Response response = await client.patch(
+      Response response = await http.patch(
         Uri.parse('$baseURL/users/username'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(<String, String>{
-          'newUser': newUsername,
+          'newUsername': newUsername,
         }),
       );
+      print('from remote data source: statusCode = ${response.statusCode}');
 
       if ((response.statusCode) ~/ 100 == 2) {
         final token = jsonDecode(response.body)['token'];
@@ -99,7 +101,7 @@ class AuthRemoteDataSource {
       String oldPassword, String newPassword) async {
     try {
       final token = await localDataSource.getToken();
-      Response response = await client.patch(
+      Response response = await http.patch(
         Uri.parse('$baseURL/users/password'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -112,6 +114,8 @@ class AuthRemoteDataSource {
       );
 
       if ((response.statusCode) ~/ 100 == 2) {
+        print(
+            'from auth_remote_datasource.dart  updatepassword+ ${response.body}');
         final token = jsonDecode(response.body)['token'];
         await localDataSource.setToken(token);
         return const Right(OperationSuccess('Update Successful'));
@@ -126,7 +130,7 @@ class AuthRemoteDataSource {
   Future<Either<Failure, Success>> deleteUser() async {
     try {
       final token = await localDataSource.getToken();
-      Response response = await client.delete(
+      Response response = await http.delete(
         Uri.parse('$baseURL/users'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -144,9 +148,6 @@ class AuthRemoteDataSource {
     }
   }
 }
-
-
-
 
 
 

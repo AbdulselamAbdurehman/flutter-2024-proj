@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dartz/dartz.dart';
 import 'package:quiz_app/core/errors/failures.dart';
 import 'package:quiz_app/core/utils/utility_objects.dart';
@@ -16,6 +18,8 @@ class AuthRepositoryImpl implements AuthRepository {
       {required String userId,
       required String password,
       required String role}) {
+    print(
+        'from repository impl: userId = $userId, password = $password, role = $role');
     return authRemoteDataSource.login(userId, password, role);
   }
 
@@ -43,5 +47,10 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, Success>> updateUsername(
       {required String newUsername}) {
     return authRemoteDataSource.updateUsername(newUsername);
+  }
+
+  @override
+  Future<Either<Failure, Success>> deleteUser() {
+    return authRemoteDataSource.deleteUser();
   }
 }

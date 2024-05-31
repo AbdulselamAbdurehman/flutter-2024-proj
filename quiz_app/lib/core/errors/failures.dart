@@ -20,3 +20,7 @@ class CacheFailure extends Failure {
 class InvalidInput extends Failure {
   const InvalidInput(super.message);
 }
+
+class DataBaseFailure extends Failure {
+  const DataBaseFailure(super.message);
+}

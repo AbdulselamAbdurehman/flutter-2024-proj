@@ -59,3 +59,5 @@ class UpdateUsernameEvent extends AuthEvent {
   @override
   List<Object?> get props => [newUsername];
 }
+
+class DeleteUserEvent extends AuthEvent {}
