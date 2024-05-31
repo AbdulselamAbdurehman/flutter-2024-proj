@@ -113,6 +113,8 @@ class _NoteScreenState extends State<NoteScreen> {
             ),
             SizedBox(height: 16),
             TextFormField(
+              maxLines: 7,
+              keyboardType: TextInputType.multiline,
               controller: _updatedNoteTextController,
               decoration: InputDecoration(
                 hintText: 'Your note here',
