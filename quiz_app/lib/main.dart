@@ -258,34 +258,3 @@ Future<bool> hasValidToken(SharedPreferences prefs) async {
   }
   return false;
 }
-
-// void makeRequest() async {
-//   String baseURL = 'http://localhost:3000';
-//   String token =
-//       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYmR1QGdtYWlsLmNvbSIsInJvbGUiOiJJTlNUUlVDVE9SIiwiaWF0IjoxNzE3OTQ2OTc2LCJleHAiOjE3MTc5NDk5NzZ9.3AOxMmBWAUuTicKYEZqDvDWZvDWhaRdOAe2LgTzaWPo';
-//   final response = await http.get(
-//     Uri.parse('$baseURL/questions'),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//       'Authorization': 'Bearer $token',
-//     },
-//   );
-//   print(response.statusCode);
-//   final result = response.body;
-//   print(response.statusCode);
-//   final finalResult = List<Map<String, dynamic>>.from(jsonDecode(result));
-//   for (var map in finalResult) {
-//     // Your logic for iterating over each map in finalResult
-//     print(map);
-//   }
-// }
-
-//   // if ((response.statusCode) ~/ 100 == 2) {
-//   //   final List<dynamic> jsonList = jsonDecode(response.body);
-//   //   final List<QuestionModel> result =
-//   //       jsonList.map((json) => QuestionModel.fromJson(json)).toList();
-//   //   return Right(result);
-//   // } else {
-//   //   return const Left(OperationFailure('Couldn\'t Fetch questions'));
-//   // }
-
