@@ -8,6 +8,10 @@ import 'package:quiz_app/features/notes/presentation/bloc/note_bloc.dart';
 import 'package:quiz_app/features/notes/presentation/bloc/note_event.dart';
 import 'package:quiz_app/features/notes/presentation/bloc/note_state.dart';
 
+// Represents the screen for managing notes.
+// This StatefulWidget initializes form keys, text controllers, and handles
+// state changes related to note creation, update, and deletion
+
 class NoteScreen extends StatefulWidget {
   const NoteScreen({super.key});
 
@@ -15,6 +19,7 @@ class NoteScreen extends StatefulWidget {
   State<NoteScreen> createState() => _NoteScreenState();
 }
 
+// Form keys and text controllers are managed here.
 class _NoteScreenState extends State<NoteScreen> {
   final _updateFormKey = GlobalKey<FormState>();
   final _updatedNoteTextController = TextEditingController();
@@ -23,18 +28,21 @@ class _NoteScreenState extends State<NoteScreen> {
 
   @override
   void initState() {
+     // Initialize state and fetch initial data.
     super.initState();
     BlocProvider.of<NoteBloc>(context).add(GetNoteEvent());
   }
 
   @override
   void dispose() {
+     // Dispose text controllers
     _updatedNoteTextController.dispose();
     _newNoteTextController.dispose();
     super.dispose();
   }
 
   @override
+  // Build the UI components
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
