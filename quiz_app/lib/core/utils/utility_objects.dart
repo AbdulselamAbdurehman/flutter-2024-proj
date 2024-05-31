@@ -11,10 +11,6 @@ class Success extends Equatable {
   List<Object?> get props => [message];
 }
 
-// class OperationSuccess extends Success {
-//   const OperationSuccess({required super.message})super.message;
-// }
-
 class OperationSuccess extends Success {
   const OperationSuccess(super.message);
 }

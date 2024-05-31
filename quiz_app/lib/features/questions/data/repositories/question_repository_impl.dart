@@ -31,19 +31,6 @@ class QuestionRepositoryImpl implements QuestionRepository {
       final remoteResult =
           await questionRemoteDatasource.createQuestion(questionModel);
       return remoteResult;
-      //   .fold(
-      //     (failure) => Left(failure),
-      //     (_) async {
-      //       // If successful, save the question locally
-      //       final localResult =
-      //           await questionLocalDatasource.putQuestions([questionModel]);
-      //       return localResult.fold(
-      //         (failure) => Left(failure),
-      //         (success) => Right(success),
-      //       );
-      //     },
-      //   );
-      // } else {
     }
     return Left(NetworkFailure("No Internet"));
   }

@@ -13,7 +13,6 @@ class NoteRemoteDatasource {
   NoteRemoteDatasource({required this.baseURL, required this.localDataSource});
 
   Future<Either<Failure, Success>> createNote(NoteModel note) async {
-    //typing may be required for response var
     final token = await localDataSource.getToken();
     final response = await http.post(
       Uri.parse('$baseURL/notes'),

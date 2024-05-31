@@ -45,7 +45,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
   final localDatasource = LocalDataSource(sharedPreferences: sharedPreferences);
-  const baseUrl = 'http://10.0.2.2:3000';
+  const baseUrl = 'http://192.168.43.148:3000';
 
   //datasources DI
   final authLocalDatasource =
