@@ -3,7 +3,7 @@ import 'package:learn/core/errors/failure.dart';
 import 'package:learn/core/usecases/usecase.dart';
 import 'package:learn/features/auth/domain/entities/user.dart';
 import 'package:learn/features/auth/domain/repositories/auth_repository.dart';
-
+//will correspond with login functionality
 class LoginUsecase implements UseCase<User, LoginParams> {
   final AuthRepository repository;
 
@@ -31,3 +31,4 @@ class LoginParams {
 abstract class A {
   Future<Either<Failure, User>> call(LoginParams params);
 }
+
