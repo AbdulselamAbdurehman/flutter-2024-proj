@@ -178,7 +178,7 @@ class _InstructorScreenState extends State<InstructorScreen> {
             ),
             NavigationDestination(
               icon: Icon(Icons.add_circle),
-              label: 'Add new Question',
+              label: 'New Question',
             ),
             NavigationDestination(
               icon: Icon(Icons.note),
