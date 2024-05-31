@@ -13,6 +13,6 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..','..', 'frontend'));
   
   app.enableCors();
-  await app.listen(3000);
+  await app.listen(3000, '0.0.0.0');
 }
 bootstrap();

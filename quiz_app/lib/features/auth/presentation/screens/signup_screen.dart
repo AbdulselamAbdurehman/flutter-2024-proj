@@ -85,6 +85,9 @@ class _SignupFormState extends State<SignupForm> {
       listener: (context, state) {
         if (state is AuthFailure) {
           print('from signup_page.dart sign up failure');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
         } else if (state is AuthSuccess) {
           print(' from signup_page.dart signup success');
           context.go('/signin');

@@ -31,7 +31,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     emit(QuestionLoading());
     final result = await fetchQuestions();
     result.fold(
-      (failure) => emit(QuestionError('Failed to load questions')),
+      (failure) => emit(QuestionFetchError('Failed to load questions')),
       (questions) => emit(QuestionLoaded(questions)),
     );
   }
@@ -42,7 +42,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     final result = await createQuestion(event.question);
     result.fold(
       (failure) => emit(QuestionError('Failed to create question')),
-      (success) => emit(QuestionCreated(success.message)),
+      (success) => emit(QuestionSuccess(success.message)),
     );
   }
 
@@ -52,7 +52,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     final result = await updateQuestion(event.question);
     result.fold(
       (failure) => emit(QuestionError('Failed to update question')),
-      (success) => emit(QuestionUpdated(success.message)),
+      (success) => emit(QuestionSuccess(success.message)),
     );
   }
 
@@ -62,7 +62,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     final result = await deleteQuestion(event.question);
     result.fold(
       (failure) => emit(QuestionError('Failed to delete question')),
-      (success) => emit(QuestionDeleted(success.message)),
+      (success) => emit(QuestionSuccess(success.message)),
     );
   }
 }

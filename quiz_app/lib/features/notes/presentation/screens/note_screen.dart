@@ -78,6 +78,8 @@ class _NoteScreenState extends State<NoteScreen> {
       return _buildUpdateNoteForm(state);
     } else if (state is NoteError) {
       return _buildNewNoteForm();
+    } else if (state is NoteDeleted) {
+      return _buildNewNoteForm();
     } else {
       return _buildErrorFeedback();
     }
@@ -97,7 +99,18 @@ class _NoteScreenState extends State<NoteScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Notebook', style: TextStyle(fontSize: 20)),
+            // Text('Notebook', style: TextStyle(fontSize: 20)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                    tooltip: 'delete note',
+                    onPressed: () {
+                      BlocProvider.of<NoteBloc>(context).add(DeleteNoteEvent());
+                    },
+                    icon: Icon(Icons.delete))
+              ],
+            ),
             SizedBox(height: 16),
             TextFormField(
               controller: _updatedNoteTextController,

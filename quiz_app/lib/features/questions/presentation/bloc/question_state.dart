@@ -22,6 +22,13 @@ class QuestionLoaded extends QuestionState {
   List<Object> get props => [questions];
 }
 
+class QuestionFetchError extends QuestionState {
+  final String message;
+  const QuestionFetchError(this.message);
+  @override
+  List<Object> get props => [message];
+}
+
 class QuestionError extends QuestionState {
   final String message;
 
@@ -31,28 +38,9 @@ class QuestionError extends QuestionState {
   List<Object> get props => [message];
 }
 
-class QuestionCreated extends QuestionState {
+class QuestionSuccess extends QuestionState {
   final String message;
-
-  const QuestionCreated(this.message);
-
-  @override
-  List<Object> get props => [message];
-}
-
-class QuestionUpdated extends QuestionState {
-  final String message;
-
-  const QuestionUpdated(this.message);
-
-  @override
-  List<Object> get props => [message];
-}
-
-class QuestionDeleted extends QuestionState {
-  final String message;
-
-  const QuestionDeleted(this.message);
+  const QuestionSuccess(this.message);
 
   @override
   List<Object> get props => [message];

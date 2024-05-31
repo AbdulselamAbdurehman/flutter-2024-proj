@@ -77,11 +77,9 @@ class _SigninFormState extends State<SigninForm> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          print('login failure');
+          print('from siginin_screen.dart. login failure');
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(
-                    'Wrong Credentials: ${_passwordController.text}, UserId: ${_userIdController.text}, role: $selectedRole')),
+            SnackBar(content: Text(state.message)),
           );
         } else if (state is AuthSuccess) {
           print(' from signin.dart login success');

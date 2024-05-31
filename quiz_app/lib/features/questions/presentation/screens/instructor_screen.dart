@@ -40,7 +40,20 @@ class _InstructorScreenState extends State<InstructorScreen> {
           centerTitle: true,
           title: const Text('Solve Questions'),
         ),
-        body: BlocBuilder<QuestionBloc, QuestionState>(
+        body: BlocConsumer<QuestionBloc, QuestionState>(
+          listener: (context, state) {
+            if (state is QuestionSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Center(child: Text(state.message))));
+              BlocProvider.of<QuestionBloc>(context).add(FetchQuestionsEvent());
+            } else if (state is QuestionError) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Center(
+                child: Text(state.message),
+              )));
+              BlocProvider.of<QuestionBloc>(context).add(FetchQuestionsEvent());
+            }
+          },
           builder: (context, state) {
             if (state is QuestionLoading) {
               return Center(child: CircularProgressIndicator());
@@ -135,7 +148,7 @@ class _InstructorScreenState extends State<InstructorScreen> {
                   },
                 ),
               );
-            } else if (state is QuestionError) {
+            } else if (state is QuestionFetchError) {
               return Center(child: Text(state.message));
             }
             return Center(child: Text('No Questions Available'));

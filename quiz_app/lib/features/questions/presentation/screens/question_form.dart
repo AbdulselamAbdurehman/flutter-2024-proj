@@ -174,8 +174,9 @@ class _QuestionFormState extends State<QuestionForm> {
                         hintText: 'Brief explanation',
                         border: OutlineInputBorder(),
                       ),
-                      validator: (value) =>
-                          (value == null) ? 'Please brief explanation' : null,
+                      validator: (value) => (value == null || value.isEmpty)
+                          ? 'Please brief explanation'
+                          : null,
                     ),
                     const SizedBox(height: 31),
                     Row(

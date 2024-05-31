@@ -30,21 +30,22 @@ class QuestionRepositoryImpl implements QuestionRepository {
       );
       final remoteResult =
           await questionRemoteDatasource.createQuestion(questionModel);
-      return remoteResult.fold(
-        (failure) => Left(failure),
-        (_) async {
-          // If successful, save the question locally
-          final localResult =
-              await questionLocalDatasource.putQuestions([questionModel]);
-          return localResult.fold(
-            (failure) => Left(failure),
-            (success) => Right(success),
-          );
-        },
-      );
-    } else {
-      return Left(NetworkFailure("No Internet"));
+      return remoteResult;
+      //   .fold(
+      //     (failure) => Left(failure),
+      //     (_) async {
+      //       // If successful, save the question locally
+      //       final localResult =
+      //           await questionLocalDatasource.putQuestions([questionModel]);
+      //       return localResult.fold(
+      //         (failure) => Left(failure),
+      //         (success) => Right(success),
+      //       );
+      //     },
+      //   );
+      // } else {
     }
+    return Left(NetworkFailure("No Internet"));
   }
 
   @override
@@ -60,20 +61,21 @@ class QuestionRepositoryImpl implements QuestionRepository {
       print('form delete question of question_repo_impl.dart');
       final remoteResult =
           await questionRemoteDatasource.deleteQuestion(questionModel);
-      return remoteResult.fold(
-        (failure) => Left(failure),
-        (_) async {
-          // If successful, delete the question locally
-          final localResult =
-              await questionLocalDatasource.deleteQuestion(questionModel);
-          return localResult.fold(
-            (failure) => Left(failure),
-            (success) => Right(success),
-          );
-        },
-      );
+      return remoteResult;
+      // .fold(
+      //   (failure) => Left(failure),
+      //   (_) async {
+      //     // If successful, delete the question locally
+      //     final localResult =
+      //         await questionLocalDatasource.deleteQuestion(questionModel);
+      //     return localResult.fold(
+      //       (failure) => Left(failure),
+      //       (success) => Right(success),
+      //     );
+      //   },
+      // );
     } else {
-      return Left(NetworkFailure('No Internet'));
+      return Left(NetworkFailure('Network Faiure'));
     }
   }
 
@@ -96,20 +98,20 @@ class QuestionRepositoryImpl implements QuestionRepository {
               .toList());
         },
       );
-    } else {
-      final localResult = await questionLocalDatasource.getQuestions();
-      return localResult.fold(
-        (failure) => Left(failure),
-        (questionModels) => Right(questionModels
-            .map((model) => Question(
-                questionNumber: model.questionNumber,
-                answer: model.answer,
-                description: model.description,
-                explanation: model.explanation,
-                options: model.options))
-            .toList()),
-      );
     }
+    return Left(NetworkFailure('Network Failure'));
+    // final localResult = await questionLocalDatasource.getQuestions();
+    // return localResult.fold(
+    //   (failure) => Left(failure),
+    //   (questionModels) => Right(questionModels
+    //       .map((model) => Question(
+    //           questionNumber: model.questionNumber,
+    //           answer: model.answer,
+    //           description: model.description,
+    //           explanation: model.explanation,
+    //           options: model.options))
+    //       .toList()),
+    // );
   }
 
   @override
@@ -124,20 +126,20 @@ class QuestionRepositoryImpl implements QuestionRepository {
       );
       final remoteResult =
           await questionRemoteDatasource.updateQuestion(questionModel);
-      return remoteResult.fold(
-        (failure) => Left(failure),
-        (_) async {
-          // If successful, update the question locally
-          final localResult =
-              await questionLocalDatasource.putQuestions([questionModel]);
-          return localResult.fold(
-            (failure) => Left(failure),
-            (success) => Right(success),
-          );
-        },
-      );
-    } else {
-      return Left(NetworkFailure('No Internet'));
+      return remoteResult;
+      // .fold(
+      //   (failure) => Left(failure),
+      //   (_) async {
+      //     // If successful, update the question locally
+      //     final localResult =
+      //         await questionLocalDatasource.putQuestions([questionModel]);
+      //     return localResult.fold(
+      //       (failure) => Left(failure),
+      //       (success) => Right(success),
+      //     );
+      //   },
+      // );
     }
+    return Left(NetworkFailure('No Internet'));
   }
 }

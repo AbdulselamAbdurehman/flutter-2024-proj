@@ -44,7 +44,7 @@ Future<void> main() async {
   //shared Dependecies
   final sharedPreferences = await SharedPreferences.getInstance();
   final localDatasource = LocalDataSource(sharedPreferences: sharedPreferences);
-  const baseUrl = 'http://localhost:3000';
+  const baseUrl = 'http://10.0.2.2:3000';
 
   //datasources DI
   final authLocalDatasource =
