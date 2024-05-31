@@ -1,4 +1,6 @@
-// ignore_for_file: prefer_const_constructors, avoid_print
+
+//importing all necessary packages
+//// ignore_for_file: prefer_const_constructors, avoid_print
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
@@ -6,6 +8,9 @@ import 'package:quiz_app/core/errors/failures.dart';
 import 'package:quiz_app/core/utils/utility_objects.dart';
 import 'package:quiz_app/features/questions/data/models/question_model.dart';
 
+
+//Posts a question to the remote server.
+// Retrieves an authentication token from the local data source and sends an HTTP POST request
 class QuestionRemoteDatasource {
   final String baseURL;
   final LocalDataSource localDataSource;

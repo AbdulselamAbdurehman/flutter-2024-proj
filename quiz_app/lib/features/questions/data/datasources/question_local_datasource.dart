@@ -8,6 +8,7 @@ import 'package:quiz_app/features/questions/data/models/question_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+// Initialize the local database for storing questions
 class QuestionLocalDatasource {
   Future<Database> _getDatabase() async {
     return openDatabase(
@@ -20,6 +21,12 @@ class QuestionLocalDatasource {
       version: 1,
     );
   }
+
+// Saves a list of QuestionModel to the local database.
+// Converts question options to JSON strings and uses batch insert
+// With conflict resolution strategy to replace existing entries.
+// Returns an Either containing either a DataBaseFailure if the save operation fails,
+// An operationSuccess with a success message.
 
   Future<Either<Failure, Success>> putQuestions(
       List<QuestionModel> questions) async {
@@ -45,6 +52,10 @@ class QuestionLocalDatasource {
     }
   }
 
+// Retrieves a list of QuestionModel from the local database.
+// Returns an Either containing either a DataBaseFailure if no questions
+// are found, or a list of QuestionModel on successful retrieval.
+
   Future<Either<Failure, List<QuestionModel>>> getQuestions() async {
     try {
       final db = await _getDatabase();
@@ -66,6 +77,10 @@ class QuestionLocalDatasource {
       return Left(DataBaseFailure('Database couldn\'t get questions: $e'));
     }
   }
+
+// Deletes a question from the local database.
+// Returns an Either containing either a DataBaseFailure if the deletion fails,
+// or an OperationSuccess with a success message.
 
   Future<Either<Failure, Success>> deleteQuestion(
       QuestionModel question) async {
