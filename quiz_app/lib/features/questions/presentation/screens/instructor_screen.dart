@@ -8,6 +8,9 @@ import 'package:quiz_app/features/questions/presentation/bloc/question_bloc.dart
 import 'package:quiz_app/features/questions/presentation/bloc/question_event.dart';
 import 'package:quiz_app/features/questions/presentation/bloc/question_state.dart';
 
+// Represents the screen for instructors
+// This StatefulWidget manages selected option indices and explanations
+// QuestionBloc initiation to fetch questions
 class InstructorScreen extends StatefulWidget {
   const InstructorScreen({super.key});
 
@@ -18,10 +21,11 @@ class InstructorScreen extends StatefulWidget {
 class _InstructorScreenState extends State<InstructorScreen> {
   List<int?> selectedOptionIndices = [];
   List<bool> showExplanations = [];
-
+// State management variables are declared here
   @override
   void initState() {
     super.initState();
+    // Initialize state and fetch questions
     BlocProvider.of<QuestionBloc>(context).add(FetchQuestionsEvent());
   }
 
