@@ -8,17 +8,20 @@ import 'package:dartz/dartz.dart';
 import 'package:quiz_app/core/errors/failures.dart';
 import 'auth_local_datasource.dart';
 
+// Remote data source for authentication-related network operations
 class AuthRemoteDataSource {
   final AuthLocalDataSource localDataSource;
   final String baseURL;
 
   AuthRemoteDataSource({required this.baseURL, required this.localDataSource});
 
+  // Method for logging in a user
   Future<Either<Failure, Success>> login(
       String userId, String password, String role) async {
     try {
       print('login service called. from auth_remote_datasource.dart');
 
+      // Sending POST request to login endpoint
       Response response = await http.post(
         Uri.parse('$baseURL/auth/login'),
         headers: <String, String>{
@@ -44,9 +47,11 @@ class AuthRemoteDataSource {
     }
   }
 
+  // Method for signing up a new user
   Future<Either<Failure, Success>> signup(
       String username, String password, String email, String role) async {
     try {
+      // Sending POST request to signup endpoint
       Response response = await http.post(
         Uri.parse('$baseURL/users/signup'),
         headers: <String, String>{
@@ -69,9 +74,11 @@ class AuthRemoteDataSource {
     }
   }
 
+  // Method for updating the username
   Future<Either<Failure, Success>> updateUsername(String newUsername) async {
     try {
       final token = await localDataSource.getToken();
+      // Sending PATCH request to update username
       Response response = await http.patch(
         Uri.parse('$baseURL/users/username'),
         headers: <String, String>{
@@ -96,10 +103,12 @@ class AuthRemoteDataSource {
     }
   }
 
+  // Method for updating the password
   Future<Either<Failure, Success>> updatePassword(
       String oldPassword, String newPassword) async {
     try {
       final token = await localDataSource.getToken();
+      // Sending PATCH request to update password
       Response response = await http.patch(
         Uri.parse('$baseURL/users/password'),
         headers: <String, String>{
@@ -126,9 +135,11 @@ class AuthRemoteDataSource {
     }
   }
 
+  // Method for deleting a user account
   Future<Either<Failure, Success>> deleteUser() async {
     try {
       final token = await localDataSource.getToken();
+      // Sending DELETE request to delete user
       Response response = await http.delete(
         Uri.parse('$baseURL/users'),
         headers: <String, String>{
@@ -147,97 +158,3 @@ class AuthRemoteDataSource {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-// class UserModel extends User {
-//   const UserModel({
-//     required super.username,
-//     required super.password,
-//     required super.email,
-//     required super.role,
-//   });
-
-//   factory UserModel.fromJson(Map<String, dynamic> json) {
-//     return UserModel(
-//       username: json['username'],
-//       password: json['password'],
-//       email: json['email'],
-//       role: json['role'],
-//     );
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'username': username,
-//       'password': password,
-//       'email': email,
-//       'role': role,
-//     };
-//   }
-// }
-
-// final client = Client();
-
-// Future<void> makeRequest() async {
-//   print("I am gonna make a request");
-//   Response response = await client.post(
-//     Uri.parse('http://localhost:3000/users/signup'),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//     },
-//     body: jsonEncode(<String, String>{
-//       'username': 'mina',
-//       'password': 'mina1234',
-//       'email': 'mina@gmail.com',
-//       'role': 'STUDENT'
-//     }),
-//   );
-
-//   print(response.statusCode);
-// }
-// // Future<http.Response> createAlbum(String title) async{
-// //   return await http.post(
-// //     Uri.parse('https://jsonplaceholder.typicode.com/albums'),
-// //     headers: <String, String>{
-// //       'Content-Type': 'application/json; charset=UTF-8',
-// //     },
-// //     body: jsonEncode(<String, String>{
-// //       'title': title,
-// //     }),
-// //   );
-
-
-// final client = Client();
-
-// Future<void> makeRequest() async {
-//   print("I am gonna make a request");
-//   try {
-//     Response response = await client.post(
-//       Uri.parse('http://localhost:3000/auth/login'),
-//       headers: <String, String>{
-//         'Content-Type': 'application/json; charset=UTF-8',
-//       },
-//       body: jsonEncode(<String, String>{
-//         'userId': 'mina@gmail.com',
-//         'password': 'mina1234',
-//         'role': 'STUDENT'
-//       }),
-//     );
-//     // print(response.body);
-//     if (response.statusCode == 200) {
-//       print('Response data: ${response.body}');
-//     } else {
-//       print('Failed to load data. Status code: ${response.statusCode}');
-//     }
-//   } catch (e) {
-//     print('Error occurred: $e');
-//   }
-// }

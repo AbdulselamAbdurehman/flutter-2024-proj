@@ -1,4 +1,4 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:connectivity_plus/connectivity_plus.dart'; // Package for checking network connectivity
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +15,7 @@ class OperationSuccess extends Success {
   const OperationSuccess(super.message);
 }
 
+// Function to validate email addresses
 String? validateEmail(String? value) {
   const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
       r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
@@ -30,30 +31,36 @@ String? validateEmail(String? value) {
       : null;
 }
 
+// Class for handling local data storage
 class LocalDataSource {
   final SharedPreferences sharedPreferences;
 
   LocalDataSource({required this.sharedPreferences});
 
-  static const token = 'TOKEN';
+  static const token = 'TOKEN'; // Key for storing token
 
+  // Method to set a new token
   Future<void> setToken(String newToken) async {
     await sharedPreferences.setString(token, newToken);
   }
 
+  // Method to get the stored token
   Future<String?> getToken() async {
     return sharedPreferences.getString(token);
   }
 
+  // Method to clear the stored token
   Future<void> clearToken() async {
     await sharedPreferences.remove(token);
   }
 }
 
+// Function to check if the device is connected to the internet
 Future<bool> deviceIsConnected() async {
   final List<ConnectivityResult> connectivityResult =
       await (Connectivity().checkConnectivity());
 
+  // Check for various types of connectivity
   if (connectivityResult.contains(ConnectivityResult.mobile)) {
     return true;
   } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
