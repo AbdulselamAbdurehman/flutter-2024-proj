@@ -1,3 +1,9 @@
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <img src="/ui/signup_quizapp.png" alt="QuizApp Sign Up Screen" width="300" height="600">
+    <img src="/ui/signin_quizapp.jpg" alt="QuizApp Sign In Screen" width="300" height="600">
+    <img src="/ui/account_settings_quizapp.png" alt="QuizApp Account Settings Screen" width="300" height="600">
+</div>
+
 # Quiz-App
 
 Quiz-App is a dynamic mobile application designed to engage both students and instructors through interactive quizzes and note-taking functionalities. The app features role-based access control, allowing instructors to create, edit, and delete questions while students can answer questions, receive instant feedback, and manage their personal notes. This application is implemented using the Bloc (Business Logic Component) pattern for state management, ensuring a clear separation between the presentation layer and the business logic, which enhances maintainability and testability.
